@@ -32,6 +32,13 @@
     section input {
       width: calc(100% - 2.2em);
     }
+    section label {
+      width: 1em;
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+      text-align: left;
+    }
 
     button {
       box-shadow:inset 0px 1px 0px 0px #ffffff;
@@ -89,6 +96,7 @@
     uniform mat4 uPerspective, uTransform;
     uniform vec4 uAmbient, uDiffuse, uSpecular;
     uniform vec4 uLight;
+    uniform float uShine;
     varying vec4 vColor;
 
     void main() {
@@ -103,7 +111,7 @@
       float Kd = max(dot(L, N), 0.0);
       vec4 diffuse = Kd * uDiffuse;
 
-      float Ks = pow(max(dot(N, H), 0.0), 10.0);
+      float Ks = pow(max(dot(N, H), 0.0), uShine);
       vec4 specular = Ks * uSpecular;
 
       if (dot(L, N) < 0.0) {
@@ -147,18 +155,34 @@
     <div id="controls">
       <section>
         <h2>Position</h2>
-        x: <input id="xpos" type="range" min="-2.0" max="2.0" step="0.05"><br>
-        y: <input id="ypos" type="range" min="-2.0" max="2.0" step="0.05"><br>
-        z: <input id="zpos" type="range" min="-10.0" max="-0.1" step="0.1" value="-2.0"><br>
-        &#x03d5;: <input id="phi" type="range" min="-180" max="180" step="1"><br>
-        &#x03c1;: <input id="rho" type="range" min="-180" max="180" step="1"><br>
-        &#x03b8;: <input id="theta" type="range" min="-180" max="180" step="1"><br>
+        <label>x:</label> <input id="xpos" type="range" min="-2.0" max="2.0" step="0.05"><br>
+        <label>y:</label> <input id="ypos" type="range" min="-2.0" max="2.0" step="0.05"><br>
+        <label>z:</label> <input id="zpos" type="range" min="-10.0" max="-0.1" step="0.1" value="-2.0"><br>
+        <label>&#x03d5;:</label> <input id="phi" type="range" min="-180" max="180" step="1"><br>
+        <label>&#x03c1;:</label> <input id="rho" type="range" min="-180" max="180" step="1"><br>
+        <label>&#x03b8;:</label> <input id="theta" type="range" min="-180" max="180" step="1"><br>
       </section>
       <section>
-        <h2>Material colour</h2>
-        r: <input id="mred" type="range" min="0.0" max="1.0" step="0.05"><br>
-        g: <input id="mgrn" type="range" min="0.0" max="1.0" step="0.05"><br>
-        b: <input id="mblu" type="range" min="0.0" max="1.0" step="0.05"><br>
+        <h2>Ambient colour</h2>
+        <label>r:</label> <input id="mred" type="range" min="0.0" max="1.0" step="0.05"><br>
+        <label>g:</label> <input id="mgrn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        <label>b:</label> <input id="mblu" type="range" min="0.0" max="1.0" step="0.05"><br>
+      </section>
+      <section>
+        <h2>Diffuse colour</h2>
+        <label>r:</label> <input id="nred" type="range" min="0.0" max="1.0" step="0.05"><br>
+        <label>g:</label> <input id="ngrn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        <label>b:</label> <input id="nblu" type="range" min="0.0" max="1.0" step="0.05"><br>
+      </section>
+      <section>
+        <h2>Specular colour</h2>
+        <label>r:</label> <input id="ored" type="range" min="0.0" max="1.0" step="0.05"><br>
+        <label>g:</label> <input id="ogrn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        <label>b:</label> <input id="oblu" type="range" min="0.0" max="1.0" step="0.05"><br>
+      </section>
+      <section>
+        <h2>Shininess</h2>
+        <label>s:</label> <input id="shin" type="range" min="3.0" max="100.0" step="2.0"><br>
       </section>
     </div>
   </div>

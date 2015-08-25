@@ -19,25 +19,26 @@
         uAmbient        = gl.getUniformLocation(program, "uAmbient"),
         uDiffuse        = gl.getUniformLocation(program, "uDiffuse"),
         uSpecular       = gl.getUniformLocation(program, "uSpecular"),
+        uShine          = gl.getUniformLocation(program, "uShine"),
         uLight          = gl.getUniformLocation(program, "uLight");
 
     /* Lighting */
     var lights = [
         {
-            ambient:  vec4(0.0, 0.1, 0.0, 1.0),
-            diffuse:  vec4(0.0, 0.0, 0.0, 1.0),
-            specular: vec4(1.0, 1.0, 1.0, 1.0),
-            position: vec4(2.0, 2.0, 5.0, 0.0),
-            deltaU:   0.002,
-            deltaV:   0.003
+            ambient:    vec4(0.1, 0.1, 0.1, 1.0),
+            diffuse:    vec4(0.7, 0.7, 0.7, 1.0),
+            specular:   vec4(1.0, 1.0, 1.0, 1.0),
+            parameters: vec4(2.0, 0.2, 5.0, 0.0),
+            deltaU:     0.002,
+            deltaV:     0.003
         },
         {
-            ambient:  vec4(0.2, 0.2, 0.2, 1.0),
-            diffuse:  vec4(1.0, 1.0, 1.0, 1.0),
-            specular: vec4(1.0, 1.0, 1.0, 1.0),
-            position: vec4(1.0, 1.0, 3.0, 0.0),
-            deltaU:   0.002,
-            deltaV:   0.003
+            ambient:    vec4(0.2, 0.2, 0.2, 1.0),
+            diffuse:    vec4(1.0, 1.0, 1.0, 1.0),
+            specular:   vec4(1.0, 1.0, 1.0, 1.0),
+            parameters: vec4(1.0, 1.0, 3.0, 0.0),
+            deltaU:     0.001,
+            deltaV:     0.003
         }
     ];
 
@@ -56,11 +57,11 @@
 
         var du = lights[0].deltaU,
             dv = lights[0].deltaV,
-            lpos = lights[0].position,
+            params = lights[0].parameters,
             _light = vec4(
-                lpos[0] * Math.cos(ts * du) * Math.cos(ts * dv),
-                lpos[1] * Math.cos(ts * du) * Math.sin(ts * dv),
-                lpos[2] * Math.sin(ts * du),
+                params[0] * Math.cos(ts * du) * Math.cos(ts * dv),
+                params[1] * Math.cos(ts * du) * Math.sin(ts * dv),
+                params[2] * Math.sin(ts * du),
                 0.0
             );
 
@@ -71,7 +72,7 @@
             gl.uniform4fv(uAmbient, flatten(mult(lights[0].ambient, shape.ambient)));
             gl.uniform4fv(uDiffuse, flatten(mult(lights[0].diffuse, shape.diffuse)));
             gl.uniform4fv(uSpecular, flatten(mult(lights[0].specular, shape.specular)));
-            // TODO: set materials, colours, etc
+            gl.uniform1f(uShine, shape.shine);
 
             shape.sections.forEach(function(section) {
                 if (section.vbuffer === undefined) {

@@ -2,10 +2,10 @@ var Shape = function () {
     this.sections  = [];
     this.settings  = { x: 0, y: 0, z: -2, rx: 0, ry: 0, rz: 0 };
     this.transform = translate(0, 0, -2);
-    this.ambient   = vec4(1.0, 1.0, 1.0, 1.0);
-    this.diffuse   = vec4(1.0, 1.0, 1.0, 1.0);
+    this.ambient   = vec4(0.0, 1.0, 0.0, 1.0);
+    this.diffuse   = vec4(0.0, 1.0, 0.0, 1.0);
     this.specular  = vec4(1.0, 1.0, 1.0, 1.0);
-    this.shininess = 100.0;
+    this.shine     = 100.0;
 };
 
 Shape.accuracy       = Math.PI / 50,  // resolution of shapes
@@ -26,6 +26,34 @@ Shape.prototype.setParameters = function(x, y, z, rx, ry, rz) {
     m = mult(m, rotate(rz, 0, 0, 1));
 
     this.transform = m;
+};
+
+Shape.prototype.getColors = function() {
+    return {
+        ambient: {
+            r: this.ambient[0],
+            g: this.ambient[1],
+            b: this.ambient[2]
+        },
+        diffuse: {
+            r: this.diffuse[0],
+            g: this.diffuse[1],
+            b: this.diffuse[2]
+        },
+        specular: {
+            r: this.specular[0],
+            g: this.specular[1],
+            b: this.specular[2]
+        },
+        shine: this.shine
+    };
+};
+
+Shape.prototype.setColors = function(a, d, s, z) {
+    this.ambient = vec4(a[0], a[1], a[2], 1.0);
+    this.diffuse = vec4(d[0], d[1], d[2], 1.0);
+    this.specular = vec4(s[0], s[1], s[2], 1.0);
+    this.shine = z;
 };
 
 Shape.prototype.addSection = function(method, vertices, normals) {
@@ -139,7 +167,7 @@ var makeSphere = function(r) {
         [4, 9, 5],   [2, 4, 11],  [6, 2, 10],   [8, 6, 7],   [9, 8, 1]
     ].map(function(f) {
         return f.map(function(e) { return isoverts[e]; });
-    }), 1);
+    }), 5);
 
     var shape = new Shape();
     shape.addSection(Shape.TRIANGLES,

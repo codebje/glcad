@@ -37,38 +37,69 @@ function UI(shapes, lights) {
         }
     };
 
+    var xpos = document.getElementById('xpos'),
+        ypos = document.getElementById('ypos'),
+        zpos = document.getElementById('zpos'),
+        phi  = document.getElementById('phi'),
+        rho  = document.getElementById('rho'),
+        thet = document.getElementById('theta'),
+        mred = document.getElementById('mred'),
+        mgrn = document.getElementById('mgrn'),
+        mblu = document.getElementById('mblu'),
+        nred = document.getElementById('nred'),
+        ngrn = document.getElementById('ngrn'),
+        nblu = document.getElementById('nblu'),
+        ored = document.getElementById('ored'),
+        ogrn = document.getElementById('ogrn'),
+        oblu = document.getElementById('oblu'),
+        shin = document.getElementById('shin');
+
     var shuffle = function() {
-        var x = document.getElementById('xpos').value;
-        var y = document.getElementById('ypos').value;
-        var z = document.getElementById('zpos').value;
-        var p = document.getElementById('phi').value;
-        var r = document.getElementById('rho').value;
-        var t = document.getElementById('theta').value;
-        var i = shapeChooser.selectedIndex;
+        var x = xpos.value,
+            y = ypos.value,
+            z = zpos.value,
+            p = phi.value,
+            r = rho.value,
+            t = thet.value,
+            i = shapeChooser.selectedIndex;
 
         if (i === 0) { return; }        // nothing selected
 
         shapes[i-1].setParameters(x, y, z, p, r, t);
+        shapes[i-1].setColors(
+                [mred.value, mgrn.value, mblu.value],
+                [nred.value, ngrn.value, nblu.value],
+                [ored.value, ogrn.value, oblu.value],
+                shin.value);
     };
 
     var setsettings = function() {
         var i = shapeChooser.selectedIndex;
         if (i === 0) { return; }        // nothing selected
         var settings = shapes[i-1].getParameters();
-        document.getElementById('xpos').value = settings.x;
-        document.getElementById('ypos').value = settings.y;
-        document.getElementById('zpos').value = settings.z;
-        document.getElementById('phi').value = settings.rx;
-        document.getElementById('rho').value = settings.ry;
-        document.getElementById('theta').value = settings.rz;
+        xpos.value = settings.x;
+        ypos.value = settings.y;
+        zpos.value = settings.z;
+        phi.value  = settings.rx;
+        rho.value  = settings.ry;
+        thet.value = settings.rz;
+        var colors = shapes[i-1].getColors();
+        mred.value = colors.ambient.r;
+        mgrn.value = colors.ambient.g;
+        mblu.value = colors.ambient.b;
+        nred.value = colors.diffuse.r;
+        ngrn.value = colors.diffuse.g;
+        nblu.value = colors.diffuse.b;
+        ored.value = colors.specular.r;
+        ogrn.value = colors.specular.g;
+        oblu.value = colors.specular.b;
+        shin.value = colors.shine;
     };
 
-    document.getElementById('xpos').oninput = shuffle;
-    document.getElementById('ypos').oninput = shuffle;
-    document.getElementById('zpos').oninput = shuffle;
-    document.getElementById('phi').oninput = shuffle;
-    document.getElementById('rho').oninput = shuffle;
-    document.getElementById('theta').oninput = shuffle;
+    [xpos, ypos, zpos, phi, rho, theta, mred, mgrn, mblu,
+        nred, ngrn, nblu, ored, ogrn, oblu, shin].forEach(function(c) {
+        c.oninput = shuffle;
+    });
 
     shapeChooser.onchange = function() {
         setsettings();

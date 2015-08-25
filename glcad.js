@@ -36,7 +36,7 @@
             ambient:    vec4(0.2, 0.2, 0.2, 1.0),
             diffuse:    vec4(1.0, 1.0, 1.0, 1.0),
             specular:   vec4(1.0, 1.0, 1.0, 1.0),
-            parameters: vec4(1.0, 1.0, 3.0, 0.0),
+            parameters: vec4(-1.0, -1.0, 3.0, 0.0),
             deltaU:     0.001,
             deltaV:     0.003
         }
@@ -55,24 +55,37 @@
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        var du = lights[0].deltaU,
-            dv = lights[0].deltaV,
-            params = lights[0].parameters,
-            _light = vec4(
+        var _light = [];
+        lights.forEach(function(light) {
+            var du = light.deltaU,
+                dv = light.deltaV,
+                params = light.parameters;
+            _light = _light.concat([
                 params[0] * Math.cos(ts * du) * Math.cos(ts * dv),
                 params[1] * Math.cos(ts * du) * Math.sin(ts * dv),
                 params[2] * Math.sin(ts * du),
                 0.0
-            );
+            ]);
+        });
 
-        gl.uniform4fv(uLight, _light);
+        gl.uniform4fv(uLight, flatten(_light));
+
         shapes.forEach(function(shape) {
+            var _ambient = [],
+                _diffuse = [],
+                _specular = [];
+            lights.forEach(function(light) {
+                _ambient = _ambient.concat(mult(light.ambient, shape.ambient));
+                _diffuse = _diffuse.concat(mult(light.diffuse, shape.diffuse));
+                _specular = _specular.concat(mult(light.specular, shape.specular));
+            });
 
-            gl.uniformMatrix4fv(uTransform, false, flatten(shape.transform));
-            gl.uniform4fv(uAmbient, flatten(mult(lights[0].ambient, shape.ambient)));
-            gl.uniform4fv(uDiffuse, flatten(mult(lights[0].diffuse, shape.diffuse)));
-            gl.uniform4fv(uSpecular, flatten(mult(lights[0].specular, shape.specular)));
+            gl.uniform4fv(uAmbient, flatten(_ambient));
+            gl.uniform4fv(uDiffuse, flatten(_diffuse));
+            gl.uniform4fv(uSpecular, flatten(_specular));
+
             gl.uniform1f(uShine, shape.shine);
+            gl.uniformMatrix4fv(uTransform, false, flatten(shape.transform));
 
             shape.sections.forEach(function(section) {
                 if (section.vbuffer === undefined) {
@@ -98,7 +111,7 @@
         requestAnimationFrame(render);
     }
 
-    render();
+    requestAnimationFrame(render);
 
     UI(shapes, lights);
 }} ());

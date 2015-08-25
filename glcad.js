@@ -35,11 +35,20 @@
     var diffuse    = vec4(1.0, 1.0, 1.0, 1.0);
     var specular   = vec4(1.0, 1.0, 1.0, 1.0);
     var light      = vec4(1.0, 1.0, 3.0, 0.0);
+    var deltaU     = 0.002;
+    var deltaV     = 0.003;
 
-    gl.uniform4fv(uLight, flatten(light));
-
-    var render = function() {
+    var render = function(ts) {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        var _light = vec4(
+            light[0] * Math.cos(ts * deltaU) * Math.cos(ts * deltaV),
+            light[1] * Math.cos(ts * deltaU) * Math.sin(ts * deltaV),
+            light[2] * Math.sin(ts * deltaU),
+            0.0
+        );
+
+        gl.uniform4fv(uLight, _light);
         shapes.forEach(function(shape) {
 
             gl.uniformMatrix4fv(uTransform, false, flatten(shape.transform));

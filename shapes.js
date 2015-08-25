@@ -4,7 +4,7 @@ var Shape = function () {
     this.transform = translate(0, 0, -2);
     this.ambient   = vec4(1.0, 1.0, 1.0, 1.0);
     this.diffuse   = vec4(0.8, 0.8, 0.8, 1.0);
-    this.specular  = vec4(0.8, 0.8, 0.8, 1.0);
+    this.specular  = vec4(0.4, 0.8, 0.4, 1.0);
     this.shininess = 100.0;
 };
 
@@ -139,7 +139,7 @@ var makeSphere = function(r) {
         [4, 9, 5],   [2, 4, 11],  [6, 2, 10],   [8, 6, 7],   [9, 8, 1]
     ].map(function(f) {
         return f.map(function(e) { return isoverts[e]; });
-    }), 3);
+    }), 1);
 
     var shape = new Shape();
     shape.addSection(Shape.TRIANGLES,

@@ -94,8 +94,10 @@
   <script id="vertex-shader" type="x-shader/x-vertex">
     attribute vec3 aPosition, aNormal;
     uniform mat4 uPerspective, uTransform;
+    uniform vec4 uGlobalAmbient;
     uniform vec4 uAmbient[2], uDiffuse[2], uSpecular[2];
     uniform vec4 uLight[2];
+    uniform bool uLightOn[2];
     uniform float uShine;
     varying vec4 vColor;
 
@@ -106,20 +108,23 @@
       vec3 N = normalize((uTransform * vec4(aNormal, 0.0)).xyz);
       vec3 E = normalize(pos.xyz);
 
-      vColor = vec4(0.0, 0.0, 0.0, 1.0);
+      vColor = uGlobalAmbient;
 
       for (int i = 0; i < 2; i++) {
-        vec3 L = normalize(uLight[i].xyz + pos.xyz);
-        vec3 H = normalize(L - E);
+        if (uLightOn[i]) {
+          vec3 L = normalize(uLight[i].xyz - pos.xyz);
+          vec3 H = normalize(L - E);
+          float dist = length(uLight[i].xyz - pos.xyz);
 
-        vColor += uAmbient[i];
+          vColor += uAmbient[i] / dist;
 
-        float Kd = max(dot(L, N), 0.0);
-        vColor += Kd * uDiffuse[i];
+          float Kd = max(dot(L, N), 0.0);
+          vColor += Kd * uDiffuse[i] / dist;
 
-        float Ks = pow(max(dot(N, H), 0.0), uShine);
-        if (dot(L, N) > 0.0) {
-          vColor += Ks * uSpecular[i];
+          float Ks = pow(max(dot(N, H), 0.0), uShine);
+          if (dot(L, N) > 0.0) {
+            vColor += Ks * uSpecular[i] / dist;
+          }
         }
       }
 

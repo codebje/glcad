@@ -8,19 +8,21 @@
     /* Set up canvas */
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
-    var program = initShaders(gl, "vertex-shader", "fragment-shader" );
+    var program = initShaders(gl, 'vertex-shader', 'fragment-shader' );
     gl.useProgram(program);
 
     /* Attributes & Uniforms */
-    var aPosition       = gl.getAttribLocation(program, "aPosition"),
-        aNormal         = gl.getAttribLocation(program, "aNormal"),
-        uPerspective    = gl.getUniformLocation(program, "uPerspective"),
-        uTransform      = gl.getUniformLocation(program, "uTransform"),
-        uAmbient        = gl.getUniformLocation(program, "uAmbient"),
-        uDiffuse        = gl.getUniformLocation(program, "uDiffuse"),
-        uSpecular       = gl.getUniformLocation(program, "uSpecular"),
-        uShine          = gl.getUniformLocation(program, "uShine"),
-        uLight          = gl.getUniformLocation(program, "uLight");
+    var aPosition       = gl.getAttribLocation(program, 'aPosition'),
+        aNormal         = gl.getAttribLocation(program, 'aNormal'),
+        uPerspective    = gl.getUniformLocation(program, 'uPerspective'),
+        uTransform      = gl.getUniformLocation(program, 'uTransform'),
+        uAmbient        = gl.getUniformLocation(program, 'uAmbient'),
+        uDiffuse        = gl.getUniformLocation(program, 'uDiffuse'),
+        uSpecular       = gl.getUniformLocation(program, 'uSpecular'),
+        uShine          = gl.getUniformLocation(program, 'uShine'),
+        uLightOn        = gl.getUniformLocation(program, 'uLightOn'),
+        uGlobalAmbient  = gl.getUniformLocation(program, 'uGlobalAmbient'),
+        uLight          = gl.getUniformLocation(program, 'uLight');
 
     /* Lighting */
     var lights = [
@@ -30,7 +32,8 @@
             specular:   vec4(1.0, 1.0, 1.0, 1.0),
             parameters: vec4(2.0, 0.2, 5.0, 0.0),
             deltaU:     0.002,
-            deltaV:     0.003
+            deltaV:     0.003,
+            on:         true
         },
         {
             ambient:    vec4(0.2, 0.2, 0.2, 1.0),
@@ -38,7 +41,8 @@
             specular:   vec4(1.0, 1.0, 1.0, 1.0),
             parameters: vec4(-1.0, -1.0, 3.0, 0.0),
             deltaU:     0.001,
-            deltaV:     0.003
+            deltaV:     0.003,
+            on:         true
         }
     ];
 
@@ -73,13 +77,19 @@
         shapes.forEach(function(shape) {
             var _ambient = [],
                 _diffuse = [],
-                _specular = [];
+                _specular = [],
+                _enabled = [];
             lights.forEach(function(light) {
+                _enabled.push(light.on);
                 _ambient = _ambient.concat(mult(light.ambient, shape.ambient));
                 _diffuse = _diffuse.concat(mult(light.diffuse, shape.diffuse));
                 _specular = _specular.concat(mult(light.specular, shape.specular));
             });
 
+            gl.uniform4fv(uGlobalAmbient,
+                    flatten(mult([0.05, 0.05, 0.05, 1.0], shape.ambient)));
+
+            gl.uniform1iv(uLightOn, new Int32Array(_enabled));
             gl.uniform4fv(uAmbient, flatten(_ambient));
             gl.uniform4fv(uDiffuse, flatten(_diffuse));
             gl.uniform4fv(uSpecular, flatten(_specular));

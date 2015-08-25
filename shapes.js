@@ -8,7 +8,7 @@ var Shape = function () {
     this.shine     = 80.0;
 };
 
-Shape.accuracy       = Math.PI / 50,  // resolution of shapes
+Shape.accuracy       = Math.PI / 100,  // resolution of shapes
 
 Shape.TRIANGLES      = 4;
 Shape.TRIANGLE_STRIP = 5;
@@ -77,9 +77,30 @@ Shape.prototype.addDisc = function(r, h) {
     this.addSection(Shape.TRIANGLE_FAN, fan, norm);
 };
 
+var unstrip = function(strip) {
+    console.log(strip.length);
+    var vertices = [];
+    var normals  = [];
+    for (var i = 2, dn=0; i < strip.length; i++, dn=1-dn) {
+        vertices.push(strip[i-2]);
+        vertices.push(strip[i-1]);
+        vertices.push(strip[i-0]);
+        var t1 = subtract(strip[i-(2-dn)], strip[i-0]),
+            t2 = subtract(strip[i-0], strip[i-dn-1]),
+            nm = normalize(vec3(cross(t1, t2)));
+        normals.push(nm);
+        normals.push(nm);
+        normals.push(nm);
+    }
+
+    return { vertices: vertices, normals: normals };
+};
+
 /* returns a list of renders for a cylinder */
 var makeCylinder = function(r, h) {
     var shape = new Shape();
+    shape.addDisc(r, h);
+    shape.addDisc(r, -h);
 
     var strip = [[r, h, 0]], y = -h;
     for (var i = 0; i <= 2 * Math.PI || y > 0; i += Shape.accuracy) {
@@ -87,7 +108,9 @@ var makeCylinder = function(r, h) {
         y = -y;
     }
 
-    shape.addSection(Shape.TRIANGLE_STRIP, strip);
+    // convert triangle strip into triangles with normals
+    var tris = unstrip(strip);
+    shape.addSection(Shape.TRIANGLES, tris.vertices, tris.normals);
 
     return shape;
 };
@@ -104,7 +127,9 @@ var makeCone = function(r, h) {
         w = r - w;
     }
 
-    shape.addSection(Shape.TRIANGLE_STRIP, strip);
+    // convert triangle strip into triangles with normals
+    var tris = unstrip(strip);
+    shape.addSection(Shape.TRIANGLES, tris.vertices, tris.normals);
 
     return shape;
 };

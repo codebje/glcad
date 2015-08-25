@@ -125,6 +125,14 @@ function UI(shapes, lights) {
         if (lightIndex === i) return;
         lightIndex = i;
 
+        if (i === 0) {
+            light0.className = 'active';
+            light1.className = '';
+        } else {
+            light0.className = '';
+            light1.className = 'active';
+        }
+
         ared.value = lights[i].ambient[0];
         agrn.value = lights[i].ambient[1];
         ablu.value = lights[i].ambient[2];

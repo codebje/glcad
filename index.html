@@ -88,6 +88,43 @@
       right: 1em;
       text-align: right;
     }
+
+    .onoffswitch {
+      display: inline-block;
+      margin-left: 1em;
+      position: relative; width: 25px;
+      -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    }
+    .onoffswitch-checkbox {
+      display: none;
+    }
+    .onoffswitch-label {
+      display: block; overflow: hidden; cursor: pointer;
+      height: 8px; padding: 0; line-height: 8px;
+      border: 0px solid #FFFFFF; border-radius: 14px;
+      background-color: #DBDBDB;
+    }
+    .onoffswitch-label:before {
+      content: "";
+      display: block; width: 14px; margin: -3px;
+      background: #FFFFFF;
+      position: absolute; top: 0; bottom: 0;
+      right: 16px;
+      border-radius: 14px;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label {
+      background-color: #E9F2BD;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+      border-color: #E9F2BD;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+      margin-left: 0;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+      right: 0px; 
+      background-color: #8EF043; 
+    }
   </style>
 </head>
 <body>
@@ -200,6 +237,10 @@
     <div> <!-- Select light source to control -->
       <button id="light-0" class="active">Light 1</button>
       <button id="light-1">Light 2</button>
+      <div class="onoffswitch">
+        <input type="checkbox" id="lighton" class="onoffswitch-checkbox" checked>
+        <label class="onoffswitch-label" for="lighton"></label>
+      </div>
     </div>
     <div> <!-- controls -->
       <section>

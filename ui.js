@@ -118,7 +118,12 @@ function UI(shapes, lights) {
         dblu: document.getElementById('dblu'),
         sred: document.getElementById('sred'),
         sgrn: document.getElementById('sgrn'),
-        sblu: document.getElementById('sblu')
+        sblu: document.getElementById('sblu'),
+        mva:  document.getElementById('mva'),
+        mvb:  document.getElementById('mvb'),
+        mvc:  document.getElementById('mvc'),
+        mvu:  document.getElementById('mvu'),
+        mvv:  document.getElementById('mvv')
     };
 
     var lightIndex = -1;
@@ -147,6 +152,12 @@ function UI(shapes, lights) {
         sred.value = lights[i].specular[0];
         sgrn.value = lights[i].specular[1];
         sblu.value = lights[i].specular[2];
+
+        mva.value  = lights[i].parameters[0];
+        mvb.value  = lights[i].parameters[1];
+        mvc.value  = lights[i].parameters[2];
+        mvu.value  = lights[i].deltaU;
+        mvv.value  = lights[i].deltaV;
     };
 
     var setLight = function(key, idx) {
@@ -169,6 +180,11 @@ function UI(shapes, lights) {
     sred.oninput   = setLight('specular', 0);
     sgrn.oninput   = setLight('specular', 1);
     sblu.oninput   = setLight('specular', 2);
+    mva.oninput    = setLight('parameters', 0);
+    mvb.oninput    = setLight('parameters', 1);
+    mvc.oninput    = setLight('parameters', 2);
+    mvu.oninput    = function() { lights[lightIndex].deltaU = mvu.value; };
+    mvv.oninput    = function() { lights[lightIndex].deltaV = mvv.value; };
 
     pickLight(0);
 

@@ -18,8 +18,55 @@
       text-align: center;
       color: #888;
     }
+
     body {
-        color: white;
+        color: #E9D9C6;
+    }
+
+    section h2 {
+      font-size: 80%;
+      margin: 1em 0 0 1.2em;
+      font-weight: normal;
+      text-align: center;
+    }
+    section input {
+      width: calc(100% - 2.2em);
+    }
+
+    button {
+      box-shadow:inset 0px 1px 0px 0px #ffffff;
+      background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+      background-color:#ffffff;
+      border-radius:3px;
+      border:1px solid #dcdcdc;
+      display:inline-block;
+      cursor:pointer;
+      color:#666666;
+      font-family:Arial;
+      font-size:11px;
+      font-weight:bold;
+      padding:1px 5px;
+      text-decoration:none;
+      text-shadow:0px 1px 0px #ffffff;
+    }
+    button:hover {
+      background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+      background-color:#f6f6f6;
+    }
+    button:active {
+      position:relative;
+      top:1px;
+    }
+    button.active {
+      background:linear-gradient(to bottom, #b8e356 5%, #a5cc52 100%);
+      box-shadow:inset 0px 1px 0px 0px #d9fbbe;
+      background-color:#b8e356;
+      border:1px solid #83c41a;
+      text-shadow:0px 1px 0px #86ae47;
+    }
+    button.active:hover {
+      background:linear-gradient(to bottom, #a5cc52 5%, #b8e356 100%);
+      background-color:#a5cc52;
     }
 
     #ui-objects {
@@ -32,6 +79,7 @@
       position: absolute;
       top: 1em;
       right: 1em;
+      text-align: right;
     }
   </style>
 </head>
@@ -97,17 +145,53 @@
       <button id="kill">- Remove</button>
     </div>
     <div id="controls">
-      x: <input id="xpos" type="range" min="-2.0" max="2.0" step="0.05"><br>
-      y: <input id="ypos" type="range" min="-2.0" max="2.0" step="0.05"><br>
-      z: <input id="zpos" type="range" min="-10.0" max="-0.1" step="0.1" value="-2.0"><br>
-      &#x03d5;: <input id="phi" type="range" min="-180" max="180" step="1"><br>
-      &#x03c1;: <input id="rho" type="range" min="-180" max="180" step="1"><br>
-      &#x03b8;: <input id="theta" type="range" min="-180" max="180" step="1"><br>
+      <section>
+        <h2>Position</h2>
+        x: <input id="xpos" type="range" min="-2.0" max="2.0" step="0.05"><br>
+        y: <input id="ypos" type="range" min="-2.0" max="2.0" step="0.05"><br>
+        z: <input id="zpos" type="range" min="-10.0" max="-0.1" step="0.1" value="-2.0"><br>
+        &#x03d5;: <input id="phi" type="range" min="-180" max="180" step="1"><br>
+        &#x03c1;: <input id="rho" type="range" min="-180" max="180" step="1"><br>
+        &#x03b8;: <input id="theta" type="range" min="-180" max="180" step="1"><br>
+      </section>
+      <section>
+        <h2>Material colour</h2>
+        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+      </section>
     </div>
   </div>
 
   <div id="ui-lights">
-    Light 1, Light 2
+    <div> <!-- Select light source to control -->
+      <button id="light-0" class="active">Light 1</button>
+      <button id="light-1">Light 2</button>
+    </div>
+    <div> <!-- controls -->
+      <section>
+        <h2>Ambient</h2>
+        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+      </section>
+      <section>
+        <h2>Diffuse</h2>
+        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+      </section>
+      <section>
+        <h2>Specular</h2>
+        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+      </section>
+      <section>
+        <h2>Movement</h2>
+      </section>
+
+    </div>
   </div>
 
   <div id="note">

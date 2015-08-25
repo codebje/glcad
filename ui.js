@@ -5,7 +5,7 @@ function UI(shapes, lights) {
         shapes.push(shape);
 
         var opt = document.createElement('option');
-        opt.value = shapes.length;
+        opt.value = shapes.length - 1;
         opt.appendChild(document.createTextNode(label));
         opt.selected = true;
         shapeChooser.appendChild(opt);

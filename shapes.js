@@ -19,7 +19,7 @@ Shape.prototype.getParameters = function() {
 };
 
 Shape.prototype.setParameters = function(x, y, z, rx, ry, rz) {
-    this.settings = { x: x, y: y, z: y, rx: rx, ry: ry, rz: rz };
+    this.settings = { x: x, y: y, z: z, rx: rx, ry: ry, rz: rz };
 
     var  m = mult(translate(x, y, z), rotate(rx, 1, 0, 0));
     m = mult(m, rotate(ry, 0, 1, 0));
@@ -178,8 +178,8 @@ var makeSphere = function(r) {
                          var v1 = vec3(v[0]),
                              v2 = vec3(v[1]),
                              v3 = vec3(v[2]),
-                             t1 = subtract(v2, v1),
-                             t2 = subtract(v3, v1),
+                             t1 = subtract(v1, v2),
+                             t2 = subtract(v1, v3),
                              nm = normalize(vec3(cross(t1, t2)));
                          return l.concat([nm, nm, nm]);
                      }, []));

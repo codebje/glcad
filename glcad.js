@@ -25,9 +25,9 @@
     var lights = [
         {
             ambient:  vec4(0.0, 0.1, 0.0, 1.0),
-            diffuse:  vec4(0.5, 0.8, 0.5, 1.0),
-            specular: vec4(1.0, 0.0, 1.0, 1.0),
-            position: vec4(1.0, 1.0, 5.0, 0.0),
+            diffuse:  vec4(0.0, 0.0, 0.0, 1.0),
+            specular: vec4(1.0, 1.0, 1.0, 1.0),
+            position: vec4(2.0, 2.0, 5.0, 0.0),
             deltaU:   0.002,
             deltaV:   0.003
         },

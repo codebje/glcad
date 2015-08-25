@@ -3,8 +3,8 @@ var Shape = function () {
     this.settings  = { x: 0, y: 0, z: -2, rx: 0, ry: 0, rz: 0 };
     this.transform = translate(0, 0, -2);
     this.ambient   = vec4(1.0, 1.0, 1.0, 1.0);
-    this.diffuse   = vec4(0.8, 0.8, 0.8, 1.0);
-    this.specular  = vec4(0.4, 0.8, 0.4, 1.0);
+    this.diffuse   = vec4(1.0, 1.0, 1.0, 1.0);
+    this.specular  = vec4(1.0, 1.0, 1.0, 1.0);
     this.shininess = 100.0;
 };
 

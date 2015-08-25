@@ -98,12 +98,12 @@
       vec3 N = normalize((uTransform * vec4(aNormal, 0.0)).xyz);
       vec3 L = normalize(uLight.xyz + pos.xyz);
       vec3 E = normalize(pos.xyz);
-      vec3 H = normalize(L + E);
+      vec3 H = normalize(L - E);
 
       float Kd = max(dot(L, N), 0.0);
       vec4 diffuse = Kd * uDiffuse;
 
-      float Ks = pow(max(dot(N, H), 0.0), 100.0);
+      float Ks = pow(max(dot(N, H), 0.0), 10.0);
       vec4 specular = Ks * uSpecular;
 
       if (dot(L, N) < 0.0) {

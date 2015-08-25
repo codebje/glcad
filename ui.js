@@ -30,11 +30,28 @@ function UI(shapes, lights) {
     document.getElementById('kill').onclick = function() {
         var i = shapeChooser.selectedIndex;
 
-        if (i !== 0) {
+        if (i > 0) {
             shapes.splice(i - 1, 1);
             shapeChooser.removeChild(shapeChooser.options[i]);
             setsettings();
         }
+    };
+
+    var parseColor = function(cstr) {
+        var bits = cstr.match(/^#(\w{2})(\w{2})(\w{2})$/).slice(1,4);
+        return bits.map(function(v) { return parseInt(v, 16) / 255; });
+    };
+
+    var makeHex = function(v) {
+        return ('00' + (Math.round(v * 255).toString(16))).slice(-2);
+    };
+
+    var makeColor = function(color) {
+        var bits = "rgb"
+            .split("")
+            .map(function(c) { return makeHex(color[c]); })
+            .join('');
+        return '#' + bits;
     };
 
     var xpos = document.getElementById('xpos'),
@@ -43,15 +60,12 @@ function UI(shapes, lights) {
         phi  = document.getElementById('phi'),
         rho  = document.getElementById('rho'),
         thet = document.getElementById('theta'),
-        mred = document.getElementById('mred'),
-        mgrn = document.getElementById('mgrn'),
-        mblu = document.getElementById('mblu'),
-        nred = document.getElementById('nred'),
-        ngrn = document.getElementById('ngrn'),
-        nblu = document.getElementById('nblu'),
-        ored = document.getElementById('ored'),
-        ogrn = document.getElementById('ogrn'),
-        oblu = document.getElementById('oblu'),
+        sclx = document.getElementById('sx'),
+        scly = document.getElementById('sy'),
+        sclz = document.getElementById('sz'),
+        ambi = document.getElementById('ambi'),
+        diff = document.getElementById('diff'),
+        spec = document.getElementById('spec'),
         shin = document.getElementById('shin');
 
     var shuffle = function() {
@@ -61,21 +75,24 @@ function UI(shapes, lights) {
             p = phi.value,
             r = rho.value,
             t = thet.value,
+            sx = sclx.value,
+            sy = scly.value,
+            sz = sclz.value,
             i = shapeChooser.selectedIndex;
 
-        if (i === 0) { return; }        // nothing selected
+        if (i <= 0) { return; }        // nothing selected
 
-        shapes[i-1].setParameters(x, y, z, p, r, t);
+        shapes[i-1].setParameters(x, y, z, p, r, t, sx, sy, sz);
         shapes[i-1].setColors(
-                [mred.value, mgrn.value, mblu.value],
-                [nred.value, ngrn.value, nblu.value],
-                [ored.value, ogrn.value, oblu.value],
+                parseColor(ambi.value),
+                parseColor(diff.value),
+                parseColor(spec.value),
                 shin.value);
     };
 
     var setsettings = function() {
         var i = shapeChooser.selectedIndex;
-        if (i === 0) { return; }        // nothing selected
+        if (i <= 0) { return; }        // nothing selected
         var settings = shapes[i-1].getParameters();
         xpos.value = settings.x;
         ypos.value = settings.y;
@@ -83,23 +100,20 @@ function UI(shapes, lights) {
         phi.value  = settings.rx;
         rho.value  = settings.ry;
         thet.value = settings.rz;
+        sclx.value = settings.sx;
+        scly.value = settings.sy;
+        sclz.value = settings.sz;
         var colors = shapes[i-1].getColors();
-        mred.value = colors.ambient.r;
-        mgrn.value = colors.ambient.g;
-        mblu.value = colors.ambient.b;
-        nred.value = colors.diffuse.r;
-        ngrn.value = colors.diffuse.g;
-        nblu.value = colors.diffuse.b;
-        ored.value = colors.specular.r;
-        ogrn.value = colors.specular.g;
-        oblu.value = colors.specular.b;
+        ambi.value = makeColor(colors.ambient);
+        diff.value = makeColor(colors.diffuse);
+        spec.value = makeColor(colors.specular);
         shin.value = colors.shine;
     };
 
-    [xpos, ypos, zpos, phi, rho, theta, mred, mgrn, mblu,
-        nred, ngrn, nblu, ored, ogrn, oblu, shin].forEach(function(c) {
+    [xpos, ypos, zpos, phi, rho, theta, shin, sclx, scly, sclz].forEach(function(c) {
         c.oninput = shuffle;
     });
+    [ambi, diff, spec].forEach(function(c) { c.onchange = shuffle; });
 
     shapeChooser.onchange = function() {
         setsettings();
@@ -108,23 +122,15 @@ function UI(shapes, lights) {
     /* Lighting controls */
     var light0  = document.getElementById('light-0'),
         light1  = document.getElementById('light-1');
-        lighton = document.getElementById('lighton');
-    var lightSliders = {
-        ared: document.getElementById('ared'),
-        agrn: document.getElementById('agrn'),
-        ablu: document.getElementById('ablu'),
-        dred: document.getElementById('dred'),
-        dgrn: document.getElementById('dgrn'),
-        dblu: document.getElementById('dblu'),
-        sred: document.getElementById('sred'),
-        sgrn: document.getElementById('sgrn'),
-        sblu: document.getElementById('sblu'),
-        mva:  document.getElementById('mva'),
-        mvb:  document.getElementById('mvb'),
-        mvc:  document.getElementById('mvc'),
-        mvu:  document.getElementById('mvu'),
-        mvv:  document.getElementById('mvv')
-    };
+        lighton = document.getElementById('lighton'),
+        lamb    = document.getElementById('lamb'),
+        ldif    = document.getElementById('ldif'),
+        lspe    = document.getElementById('lspe'),
+        mva     =  document.getElementById('mva'),
+        mvb     =  document.getElementById('mvb'),
+        mvc     =  document.getElementById('mvc'),
+        mvu     =  document.getElementById('mvu'),
+        mvv     =  document.getElementById('mvv');
 
     var lightIndex = -1;
     var pickLight = function(i) {
@@ -141,17 +147,9 @@ function UI(shapes, lights) {
 
         lighton.checked = lights[i].on;
 
-        ared.value = lights[i].ambient[0];
-        agrn.value = lights[i].ambient[1];
-        ablu.value = lights[i].ambient[2];
-
-        dred.value = lights[i].diffuse[0];
-        dgrn.value = lights[i].diffuse[1];
-        dblu.value = lights[i].diffuse[2];
-
-        sred.value = lights[i].specular[0];
-        sgrn.value = lights[i].specular[1];
-        sblu.value = lights[i].specular[2];
+        lamb.value = '#' + (lights[i].ambient.slice(0,3).map(makeHex).join(''));
+        ldif.value = '#' + (lights[i].ambient.slice(0,3).map(makeHex).join(''));
+        lspe.value = '#' + (lights[i].specular.slice(0,3).map(makeHex).join(''));
 
         mva.value  = lights[i].parameters[0];
         mvb.value  = lights[i].parameters[1];
@@ -160,9 +158,12 @@ function UI(shapes, lights) {
         mvv.value  = lights[i].deltaV;
     };
 
-    var setLight = function(key, idx) {
+    var setLight = function(key) {
         return function() {
-            lights[lightIndex][key][idx] = event.target.value;
+            var rgb = parseColor(event.target.value);
+            lights[lightIndex][key][0] = rgb[0];
+            lights[lightIndex][key][1] = rgb[1];
+            lights[lightIndex][key][2] = rgb[2];
         }
     };
 
@@ -171,22 +172,60 @@ function UI(shapes, lights) {
     lighton.onchange = function() {
         lights[lightIndex].on = !lights[lightIndex].on;
     };
-    ared.oninput   = setLight('ambient', 0);
-    agrn.oninput   = setLight('ambient', 1);
-    ablu.oninput   = setLight('ambient', 2);
-    dred.oninput   = setLight('diffuse', 0);
-    dgrn.oninput   = setLight('diffuse', 1);
-    dblu.oninput   = setLight('diffuse', 2);
-    sred.oninput   = setLight('specular', 0);
-    sgrn.oninput   = setLight('specular', 1);
-    sblu.oninput   = setLight('specular', 2);
-    mva.oninput    = setLight('parameters', 0);
-    mvb.oninput    = setLight('parameters', 1);
-    mvc.oninput    = setLight('parameters', 2);
+    lamb.onchange  = setLight('ambient');
+    ldif.onchange  = setLight('diffuse');
+    lspe.onchange  = setLight('specular');
+    mva.oninput    = function() { lights[lightIndex].parameters[0] = mva.value; };
+    mvb.oninput    = function() { lights[lightIndex].parameters[1] = mvb.value; };
+    mvc.oninput    = function() { lights[lightIndex].parameters[2] = mvc.value; };
     mvu.oninput    = function() { lights[lightIndex].deltaU = mvu.value; };
     mvv.oninput    = function() { lights[lightIndex].deltaV = mvv.value; };
 
     pickLight(0);
+
+    var clearShapes = function() {
+        for (var i = shapes.length; i > 0; i--) {
+            shapeChooser.remove(i);
+        }
+        shapes.splice(0, shapes.length);
+    };
+
+    var preset = function(data) {
+        clearShapes();
+        var makers = {
+            'sphere': makeSphere,
+            'cylinder': makeCylinder,
+            'cone': makeCone
+        };
+        data.shapes.forEach(function(src) {
+            var shape = makers[src.shape].apply(null, src.parameters);
+            shape.setParameters.apply(shape,
+                    src.location.concat(src.rotation).concat(src.scale));
+            shape.setColors(src.ambient,
+                            src.diffuse,
+                            src.specular,
+                            src.shine);
+            addShape(shape, src.name);
+        });
+        data.lights.forEach(function(light, i) {
+            lights[i].ambient = light.ambient;
+            lights[i].diffuse = light.diffuse;
+            lights[i].specular = light.specular;
+            lights[i].on = light.enabled;
+            lights[i].parameters.splice(0, 3);
+            lights[i].parameters.unshift.apply(lights[i].parameters,
+                                               light.movement.slice(0, 3));
+            lights[i].deltaU = light.movement[3];
+            lights[i].deltaV = light.movement[4];
+        });
+        pickLight(1);
+        pickLight(0);
+    };
+
+    /* Presets */
+    document.getElementById('bird').onclick = function() {
+        preset(thebird);
+    };
 
     // Start life out with a sphere
     addShape(makeSphere(0.1), 'sphere #' + (sphereCount++));

@@ -1,6 +1,6 @@
 var Shape = function () {
     this.sections  = [];
-    this.settings  = { x: 0, y: 0, z: -2, rx: 0, ry: 0, rz: 0 };
+    this.settings  = { x: 0, y: 0, z: -2, rx: 0, ry: 0, rz: 0, sx: 1, sy: 1, sz: 1 };
     this.transform = translate(0, 0, -2);
     this.ambient   = vec4(0.2, 0.2, 0.2, 1.0);
     this.diffuse   = vec4(0.4, 0.4, 0.4, 1.0);
@@ -8,7 +8,7 @@ var Shape = function () {
     this.shine     = 80.0;
 };
 
-Shape.accuracy       = Math.PI / 100,  // resolution of shapes
+Shape.accuracy       = Math.PI / 180,  // resolution of shapes
 
 Shape.TRIANGLES      = 4;
 Shape.TRIANGLE_STRIP = 5;
@@ -18,12 +18,13 @@ Shape.prototype.getParameters = function() {
     return this.settings;
 };
 
-Shape.prototype.setParameters = function(x, y, z, rx, ry, rz) {
-    this.settings = { x: x, y: y, z: z, rx: rx, ry: ry, rz: rz };
+Shape.prototype.setParameters = function(x, y, z, rx, ry, rz, sx, sy, sz) {
+    this.settings = { x: x, y: y, z: z, rx: rx, ry: ry, rz: rz, sx: sx, sy: sy, sz: sz };
 
     var  m = mult(translate(x, y, z), rotate(rx, 1, 0, 0));
     m = mult(m, rotate(ry, 0, 1, 0));
     m = mult(m, rotate(rz, 0, 0, 1));
+    m = mult(m, mscale(sx, sy, sz));
 
     this.transform = m;
 };
@@ -78,7 +79,6 @@ Shape.prototype.addDisc = function(r, h) {
 };
 
 var unstrip = function(strip) {
-    console.log(strip.length);
     var vertices = [];
     var normals  = [];
     for (var i = 2, dn=0; i < strip.length; i++, dn=1-dn) {
@@ -192,7 +192,7 @@ var makeSphere = function(r) {
         [4, 9, 5],   [2, 4, 11],  [6, 2, 10],   [8, 6, 7],   [9, 8, 1]
     ].map(function(f) {
         return f.map(function(e) { return isoverts[e]; });
-    }), 5);
+    }), 2);
 
     var shape = new Shape();
     shape.addSection(Shape.TRIANGLES,

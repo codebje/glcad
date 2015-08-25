@@ -22,7 +22,9 @@
         uShine          = gl.getUniformLocation(program, 'uShine'),
         uLightOn        = gl.getUniformLocation(program, 'uLightOn'),
         uGlobalAmbient  = gl.getUniformLocation(program, 'uGlobalAmbient'),
-        uLight          = gl.getUniformLocation(program, 'uLight');
+        uLight          = gl.getUniformLocation(program, 'uLight'),
+        uBasic          = gl.getUniformLocation(program, 'uBasic'),
+        uIsBasic        = gl.getUniformLocation(program, 'uIsBasic');
 
     /* Lighting */
     var lights = [
@@ -39,12 +41,24 @@
             ambient:    vec4(0.0, 0.1, 0.0, 1.0),
             diffuse:    vec4(0.2, 0.4, 0.2, 1.0),
             specular:   vec4(0.2, 0.6, 0.2, 1.0),
-            parameters: vec4(1.0, 1.0, 3.0, 0.0),
+            parameters: vec4(1.0, 1.0, 2.0, 0.0),
             deltaU:     0,
             deltaV:     0.2,
             on:         true
         }
     ];
+
+    var lightsBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, lightsBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,
+            flatten([
+                vec3(-0.01, -0.005, 0),
+                vec3( 0.01, -0.005, 0),
+                vec3( 0.0 ,  0.01 , 0),
+                vec3(-0.01,  0.005, 0),
+                vec3( 0.01,  0.005, 0),
+                vec3( 0.0 , -0.01 , 0)
+            ]), gl.STATIC_DRAW);
 
     var render = function(ts) {
         var width  = canvas.clientWidth,
@@ -67,12 +81,13 @@
             _light = _light.concat([
                 params[0] * Math.cos(ts * du) * Math.cos(ts * dv),
                 params[1] * Math.cos(ts * du) * Math.sin(ts * dv),
-                params[2] * Math.sin(ts * du),
+                params[2] * Math.sin(ts * du) - 4,
                 0.0
             ]);
         });
 
         gl.uniform4fv(uLight, flatten(_light));
+        gl.uniform1i(uIsBasic, 0);
 
         shapes.forEach(function(shape) {
             var _ambient = [],
@@ -116,8 +131,24 @@
                 gl.enableVertexAttribArray(aNormal);
                 gl.drawArrays(section.method, 0, section.vertices.length);
             });
-
         });
+
+        /* Draw the lights */
+        gl.uniform1i(uIsBasic, 1);
+        gl.bindBuffer(gl.ARRAY_BUFFER, lightsBuffer);
+        lights.forEach(function(light, i) {
+            if (light.on) {
+                gl.uniform4fv(uBasic, flatten(light.specular));
+                var x = _light[i*4+0], y = _light[i*4+1], z = _light[i*4+2];
+                gl.uniformMatrix4fv(uTransform, false,
+                        flatten(mult(translate(x, y, z), rotate(ts/2, 0, 0, 1))));
+                gl.vertexAttribPointer(aPosition, 3, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(aPosition);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+            }
+        });
+
+
         requestAnimationFrame(render);
     }
 

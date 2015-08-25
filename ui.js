@@ -1,4 +1,4 @@
-function UI(shapes) {
+function UI(shapes, lights) {
     var shapeChooser = document.getElementById('objects');
 
     var addShape = function(shape, label) {
@@ -73,6 +73,59 @@ function UI(shapes) {
     shapeChooser.onchange = function() {
         setsettings();
     }
+
+    /* Lighting controls */
+    var light0  = document.getElementById('light-0'),
+        light1  = document.getElementById('light-1');
+    var lightSliders = {
+        ared: document.getElementById('ared'),
+        agrn: document.getElementById('agrn'),
+        ablu: document.getElementById('ablu'),
+        dred: document.getElementById('dred'),
+        dgrn: document.getElementById('dgrn'),
+        dblu: document.getElementById('dblu'),
+        sred: document.getElementById('sred'),
+        sgrn: document.getElementById('sgrn'),
+        sblu: document.getElementById('sblu')
+    };
+
+    var lightIndex = -1;
+    var pickLight = function(i) {
+        if (lightIndex === i) return;
+        lightIndex = i;
+
+        ared.value = lights[i].ambient[0];
+        agrn.value = lights[i].ambient[1];
+        ablu.value = lights[i].ambient[2];
+
+        dred.value = lights[i].diffuse[0];
+        dgrn.value = lights[i].diffuse[1];
+        dblu.value = lights[i].diffuse[2];
+
+        sred.value = lights[i].specular[0];
+        sgrn.value = lights[i].specular[1];
+        sblu.value = lights[i].specular[2];
+    };
+
+    var setLight = function(key, idx) {
+        return function() {
+            lights[lightIndex][key][idx] = event.target.value;
+        }
+    };
+
+    light0.onclick = function() { pickLight(0); };
+    light1.onclick = function() { pickLight(1); };
+    ared.oninput   = setLight('ambient', 0);
+    agrn.oninput   = setLight('ambient', 1);
+    ablu.oninput   = setLight('ambient', 2);
+    dred.oninput   = setLight('diffuse', 0);
+    dgrn.oninput   = setLight('diffuse', 1);
+    dblu.oninput   = setLight('diffuse', 2);
+    sred.oninput   = setLight('specular', 0);
+    sgrn.oninput   = setLight('specular', 1);
+    sblu.oninput   = setLight('specular', 2);
+
+    pickLight(0);
 
     // Start life out with a sphere
     addShape(makeSphere(0.1), 'sphere #' + (sphereCount++));

@@ -22,12 +22,24 @@
         uLight          = gl.getUniformLocation(program, "uLight");
 
     /* Lighting */
-    var ambient    = vec4(0.2, 0.2, 0.2, 1.0);
-    var diffuse    = vec4(1.0, 1.0, 1.0, 1.0);
-    var specular   = vec4(1.0, 1.0, 1.0, 1.0);
-    var light      = vec4(1.0, 1.0, 3.0, 0.0);
-    var deltaU     = 0.002;
-    var deltaV     = 0.003;
+    var lights = [
+        {
+            ambient:  vec4(0.0, 0.1, 0.0, 1.0),
+            diffuse:  vec4(0.5, 0.8, 0.5, 1.0),
+            specular: vec4(1.0, 0.0, 1.0, 1.0),
+            position: vec4(1.0, 1.0, 5.0, 0.0),
+            deltaU:   0.002,
+            deltaV:   0.003
+        },
+        {
+            ambient:  vec4(0.2, 0.2, 0.2, 1.0),
+            diffuse:  vec4(1.0, 1.0, 1.0, 1.0),
+            specular: vec4(1.0, 1.0, 1.0, 1.0),
+            position: vec4(1.0, 1.0, 3.0, 0.0),
+            deltaU:   0.002,
+            deltaV:   0.003
+        }
+    ];
 
     var render = function(ts) {
         var width  = canvas.clientWidth,
@@ -42,20 +54,23 @@
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        var _light = vec4(
-            light[0] * Math.cos(ts * deltaU) * Math.cos(ts * deltaV),
-            light[1] * Math.cos(ts * deltaU) * Math.sin(ts * deltaV),
-            light[2] * Math.sin(ts * deltaU),
-            0.0
-        );
+        var du = lights[0].deltaU,
+            dv = lights[0].deltaV,
+            lpos = lights[0].position,
+            _light = vec4(
+                lpos[0] * Math.cos(ts * du) * Math.cos(ts * dv),
+                lpos[1] * Math.cos(ts * du) * Math.sin(ts * dv),
+                lpos[2] * Math.sin(ts * du),
+                0.0
+            );
 
         gl.uniform4fv(uLight, _light);
         shapes.forEach(function(shape) {
 
             gl.uniformMatrix4fv(uTransform, false, flatten(shape.transform));
-            gl.uniform4fv(uAmbient, flatten(mult(ambient, shape.ambient)));
-            gl.uniform4fv(uDiffuse, flatten(mult(diffuse, shape.diffuse)));
-            gl.uniform4fv(uSpecular, flatten(mult(specular, shape.specular)));
+            gl.uniform4fv(uAmbient, flatten(mult(lights[0].ambient, shape.ambient)));
+            gl.uniform4fv(uDiffuse, flatten(mult(lights[0].diffuse, shape.diffuse)));
+            gl.uniform4fv(uSpecular, flatten(mult(lights[0].specular, shape.specular)));
             // TODO: set materials, colours, etc
 
             shape.sections.forEach(function(section) {
@@ -84,5 +99,5 @@
 
     render();
 
-    UI(shapes);
+    UI(shapes, lights);
 }} ());

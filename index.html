@@ -156,9 +156,9 @@
       </section>
       <section>
         <h2>Material colour</h2>
-        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
-        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
-        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+        r: <input id="mred" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="mgrn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="mblu" type="range" min="0.0" max="1.0" step="0.05"><br>
       </section>
     </div>
   </div>
@@ -171,30 +171,36 @@
     <div> <!-- controls -->
       <section>
         <h2>Ambient</h2>
-        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
-        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
-        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+        r: <input id="ared" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="agrn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="ablu" type="range" min="0.0" max="1.0" step="0.05"><br>
       </section>
       <section>
         <h2>Diffuse</h2>
-        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
-        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
-        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+        r: <input id="dred" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="dgrn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="dblu" type="range" min="0.0" max="1.0" step="0.05"><br>
       </section>
       <section>
         <h2>Specular</h2>
-        r: <input id="red" type="range" min="0.0" max="1.0" step="0.05"><br>
-        g: <input id="grn" type="range" min="0.0" max="1.0" step="0.05"><br>
-        b: <input id="blu" type="range" min="0.0" max="1.0" step="0.05"><br>
+        r: <input id="sred" type="range" min="0.0" max="1.0" step="0.05"><br>
+        g: <input id="sgrn" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="sblu" type="range" min="0.0" max="1.0" step="0.05"><br>
       </section>
       <section>
         <h2>Movement</h2>
+        a: <input id="mva" type="range" min="0.0" max="1.0" step="0.05"><br>
+        b: <input id="mvb" type="range" min="0.0" max="1.0" step="0.05"><br>
+        c: <input id="mvc" type="range" min="0.0" max="1.0" step="0.05"><br>
+        u: <input id="mvu" type="range" min="0.0" max="1.0" step="0.05"><br>
+        v: <input id="mvv" type="range" min="0.0" max="1.0" step="0.05"><br>
       </section>
 
     </div>
   </div>
 
   <div id="note">
-      Tested only in Chrome.
+      Tested only in Chrome.  Light movement is on the surface of an ellipsoid
+      defined by dimensions (a, b, c), and movement speeds (u, v) over time.
   </div>
 </body>

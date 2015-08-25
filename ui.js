@@ -108,6 +108,7 @@ function UI(shapes, lights) {
     /* Lighting controls */
     var light0  = document.getElementById('light-0'),
         light1  = document.getElementById('light-1');
+        lighton = document.getElementById('lighton');
     var lightSliders = {
         ared: document.getElementById('ared'),
         agrn: document.getElementById('agrn'),
@@ -133,6 +134,8 @@ function UI(shapes, lights) {
             light1.className = 'active';
         }
 
+        lighton.checked = lights[i].on;
+
         ared.value = lights[i].ambient[0];
         agrn.value = lights[i].ambient[1];
         ablu.value = lights[i].ambient[2];
@@ -154,6 +157,9 @@ function UI(shapes, lights) {
 
     light0.onclick = function() { pickLight(0); };
     light1.onclick = function() { pickLight(1); };
+    lighton.onchange = function() {
+        lights[lightIndex].on = !lights[lightIndex].on;
+    };
     ared.oninput   = setLight('ambient', 0);
     agrn.oninput   = setLight('ambient', 1);
     ablu.oninput   = setLight('ambient', 2);

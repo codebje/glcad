@@ -2,10 +2,10 @@ var Shape = function () {
     this.sections  = [];
     this.settings  = { x: 0, y: 0, z: -2, rx: 0, ry: 0, rz: 0 };
     this.transform = translate(0, 0, -2);
-    this.ambient   = vec4(0.0, 1.0, 0.0, 1.0);
-    this.diffuse   = vec4(0.0, 1.0, 0.0, 1.0);
-    this.specular  = vec4(1.0, 1.0, 1.0, 1.0);
-    this.shine     = 100.0;
+    this.ambient   = vec4(0.2, 0.2, 0.2, 1.0);
+    this.diffuse   = vec4(0.4, 0.4, 0.4, 1.0);
+    this.specular  = vec4(0.6, 0.6, 0.6, 1.0);
+    this.shine     = 80.0;
 };
 
 Shape.accuracy       = Math.PI / 50,  // resolution of shapes

@@ -165,7 +165,7 @@ var makeSphere = function(r) {
         ]);
     };
 
-    var tesselate = function(faces, count) {
+    var tessellate = function(faces, count) {
         if (count <= 0) { return faces; }
 
         faces = faces.map(function(f) {
@@ -182,17 +182,17 @@ var makeSphere = function(r) {
         });
         faces = faces.reduce(function(l, v) { return l.concat(v); }, []);
 
-        return tesselate(faces, count - 1);
+        return tessellate(faces, count - 1);
     };
 
-    var faces = tesselate([
+    var faces = tessellate([
         [0, 11, 5],  [0, 5, 1],   [0, 1, 7],    [0, 7, 10],  [0, 10, 11],
         [1, 5, 9],   [5, 11, 4],  [11, 10, 2],  [10, 7, 6],  [7, 1, 8],
         [3, 9, 4],   [3, 4, 2],   [3, 2, 6],    [3, 6, 8],   [3, 8, 9],
         [4, 9, 5],   [2, 4, 11],  [6, 2, 10],   [8, 6, 7],   [9, 8, 1]
     ].map(function(f) {
         return f.map(function(e) { return isoverts[e]; });
-    }), 2);
+    }), 5);
 
     var shape = new Shape();
     shape.addSection(Shape.TRIANGLES,

@@ -102,7 +102,7 @@
             });
 
             gl.uniform4fv(uGlobalAmbient,
-                    flatten(mult([0.2, 0.2, 0.2, 1.0], shape.ambient)));
+                    flatten(mult([0.3, 0.3, 0.3, 1.0], shape.ambient)));
 
             gl.uniform1iv(uLightOn, new Int32Array(_enabled));
             gl.uniform4fv(uAmbient, flatten(_ambient));

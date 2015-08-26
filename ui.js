@@ -222,13 +222,12 @@ function UI(shapes, lights) {
         pickLight(0);
     };
 
-    /* Presets */
-    document.getElementById('bird').onclick = function() {
-        preset(thebird);
-    };
-
-    // Start life out with a sphere
-    //addShape(makeSphere(0.1), 'sphere #' + (sphereCount++));
+    // Start life out with a cylinder and code
+    var cyl = makeCylinder(0.1, 0.2); addShape(cyl, 'cylinder #' + (cylinderCount++));
+    var cone = makeCone(0.1, 0.2); addShape(cone, 'cone #' + (coneCount++));
+    cyl.setParameters(-0.2, -0.1, -2, 0, 18, 65, 1, 1, 1);
+    cone.setParameters(0.2, 0.1, -2, 0, 75, -20, 1, 1, 1);
+    setsettings();
 
     document.getElementById('addsphere').disabled = true;
     notify = function() {

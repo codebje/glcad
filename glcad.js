@@ -29,18 +29,18 @@
     /* Lighting */
     var lights = [
         {
-            ambient:    vec4(0.1, 0.0, 0.0, 1.0),
-            diffuse:    vec4(0.4, 0.2, 0.2, 1.0),
-            specular:   vec4(0.6, 0.2, 0.2, 1.0),
+            ambient:    vec4(0.4, 0.0, 0.0, 1.0),
+            diffuse:    vec4(0.5, 0.1, 0.1, 1.0),
+            specular:   vec4(0.8, 0.2, 0.1, 1.0),
             parameters: vec4(2.0, 1.0, 3.0, 0.0),
             deltaU:     0.2,
             deltaV:     0.4,
             on:         true
         },
         {
-            ambient:    vec4(0.0, 0.1, 0.0, 1.0),
-            diffuse:    vec4(0.2, 0.4, 0.2, 1.0),
-            specular:   vec4(0.2, 0.6, 0.2, 1.0),
+            ambient:    vec4(0.0, 0.4, 0.0, 1.0),
+            diffuse:    vec4(0.1, 0.5, 0.1, 1.0),
+            specular:   vec4(0.1, 0.8, 0.2, 1.0),
             parameters: vec4(1.0, 1.0, 2.0, 0.0),
             deltaU:     0,
             deltaV:     0.2,

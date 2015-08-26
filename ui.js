@@ -228,5 +228,11 @@ function UI(shapes, lights) {
     };
 
     // Start life out with a sphere
-    addShape(makeSphere(0.1), 'sphere #' + (sphereCount++));
+    //addShape(makeSphere(0.1), 'sphere #' + (sphereCount++));
+
+    document.getElementById('addsphere').disabled = true;
+    notify = function() {
+        document.getElementById('addsphere').disabled = false;
+        console.log('spheres ready now');
+    }
 }

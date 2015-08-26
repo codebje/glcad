@@ -8,7 +8,7 @@
     /* Set up canvas */
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.enable(gl.DEPTH_TEST);
-    var program = initShaders(gl, 'vertex-shader', 'fragment-shader' );
+    var program = initShaders(gl, 'vertex-shader', 'fragment-shader', 'aPosition');
     gl.useProgram(program);
 
     /* Attributes & Uniforms */

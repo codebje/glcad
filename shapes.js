@@ -134,80 +134,18 @@ var makeCone = function(r, h) {
     return shape;
 };
 
+var sphere;
+var notify;
+var worker = new Worker('gensphere.js');
+worker.onmessage = function(evt) {
+    sphere = evt.data;
+    if (notify !== undefined) notify();
+};
+
 var makeSphere = function(r) {
-    var phi = (1 + Math.sqrt(5)) / 2;
-
-    var normalise = function(v) {
-        var l = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) / r;
-        return [ v[0] / l, v[1] / l, v[2] / l ];
-    };
-
-    var isoverts = [        // 12 vertices of an icosahedron
-        [  -1,  phi,    0],
-        [   1,  phi,    0],
-        [  -1, -phi,    0],
-        [   1, -phi,    0],
-        [   0,   -1,  phi],
-        [   0,    1,  phi],
-        [   0,   -1, -phi],
-        [   0,    1, -phi],
-        [ phi,    0,   -1],
-        [ phi,    0,    1],
-        [-phi,    0,   -1],
-        [-phi,    0,    1]
-    ].map(normalise);
-
-    var midpoint = function(v1, v2) {
-        return normalise([
-            (v1[0] + v2[0]) / 2,
-            (v1[1] + v2[1]) / 2,
-            (v1[2] + v2[2]) / 2
-        ]);
-    };
-
-    var tessellate = function(faces, count) {
-        if (count <= 0) { return faces; }
-
-        faces = faces.map(function(f) {
-            var a = midpoint(f[0], f[1]),
-                b = midpoint(f[1], f[2]),
-                c = midpoint(f[2], f[0]);
-
-            return [
-                [f[0], a, c],
-                [f[1], b, a],
-                [f[2], c, b],
-                [a, b, c]
-            ];
-        });
-        faces = faces.reduce(function(l, v) { return l.concat(v); }, []);
-
-        return tessellate(faces, count - 1);
-    };
-
-    var faces = tessellate([
-        [0, 11, 5],  [0, 5, 1],   [0, 1, 7],    [0, 7, 10],  [0, 10, 11],
-        [1, 5, 9],   [5, 11, 4],  [11, 10, 2],  [10, 7, 6],  [7, 1, 8],
-        [3, 9, 4],   [3, 4, 2],   [3, 2, 6],    [3, 6, 8],   [3, 8, 9],
-        [4, 9, 5],   [2, 4, 11],  [6, 2, 10],   [8, 6, 7],   [9, 8, 1]
-    ].map(function(f) {
-        return f.map(function(e) { return isoverts[e]; });
-    }), 5);
 
     var shape = new Shape();
-    shape.addSection(Shape.TRIANGLES,
-                     faces.reduce(function(l, v) {
-                         return l.concat(v);
-                     }, []),
-                     faces.reduce(function(l, v) {
-                         var v1 = vec3(v[0]),
-                             v2 = vec3(v[1]),
-                             v3 = vec3(v[2]),
-                             t1 = subtract(v1, v2),
-                             t2 = subtract(v1, v3),
-                             nm = normalize(vec3(cross(t1, t2)));
-                         return l.concat([nm, nm, nm]);
-                     }, []));
+    shape.addSection(Shape.TRIANGLES, sphere.vertices, sphere.normals);
 
     return shape;
 };
